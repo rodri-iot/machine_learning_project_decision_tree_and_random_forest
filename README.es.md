@@ -54,6 +54,8 @@ Para ejecutar la aplicación, ejecuta el script app.py desde la raíz del direct
 
 ```bash
 python app.py
+# or
+app_dt.ipynb
 ```
 
 ## Añadiendo Modelos
@@ -74,6 +76,51 @@ class ExampleModel(Base):
     name = Column(String)
 
 ```
+
+## Optimizando el modelo
+
+Hiper parametros para optimización del modelo
+
+```py
+hyperparams = {
+    'criterion': ['gini', 'entropy', 'log_loss'],  # Función para medir la calidad de una división.
+    'splitter': ['best', 'random'],  # Estrategia usada para dividir en nodos.
+    'max_depth': [None, 10, 20, 30, 40, 50],  # Profundidad máxima del árbol.
+    'min_samples_split': [2, 5, 10],  # Número mínimo de muestras necesarias para dividir un nodo.
+    'min_samples_leaf': [1, 2, 5, 10],  # Número mínimo de muestras necesarias en un nodo hoja.
+    'max_features': [None, 'sqrt', 'log2'],  # Número de características a considerar cuando se divide.
+    'max_leaf_nodes': [None, 10, 20, 30, 40],  # Número máximo de nodos hoja.
+    'min_impurity_decrease': [0.0, 0.01, 0.05],  # Umbral para una disminución mínima de la impureza.
+    'ccp_alpha': [0.0, 0.01, 0.1],  # Parámetro de complejidad usado para el podado.
+}
+```
+
+#### Explicación de los hiperparámetros
+- `criterion`: Define la métrica para evaluar las divisiones.
+
+   - 'gini': Gini Impurity (por defecto).
+   - 'entropy': Información de ganancia usando la entropía.
+   - 'log_loss': Entropía cruzada.
+- `splitter`:
+
+   - 'best': Escoge la mejor división.
+   - 'random': Escoge la división aleatoriamente.
+- `max_depth`: Limita la profundidad del árbol. Evita el sobreajuste. Un valor más bajo de max_depth simplifica el modelo.
+
+- `min_samples_split`: Número mínimo de muestras requeridas para dividir un nodo interno.
+
+- `min_samples_leaf`: Número mínimo de muestras que un nodo hoja debe tener.
+
+- `max_features`: Número de características a considerar cuando se busca la mejor división. Puede ser:
+
+   - None: Considera todas las características.
+   - 'sqrt': Usa la raíz cuadrada del número de características.
+   - 'log2': Usa el logaritmo en base 2 del número de características.
+- `max_leaf_nodes`: Restringe el número de nodos hoja. Un valor más bajo limita la cantidad de nodos y ayuda a evitar el sobreajuste.
+
+- `min_impurity_decrease`: Un nodo se dividirá si la disminución de impureza es mayor a este valor.
+
+- `ccp_alpha`: Parámetro de poda para la complejidad del árbol.
 
 ## Trabajando con Datos
 
