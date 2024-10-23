@@ -77,7 +77,7 @@ class ExampleModel(Base):
 
 ```
 
-## Optimizando el modelo
+## Optimizando el modelo Arbol de decisiones
 
 Hiper parametros para optimización del modelo
 
@@ -121,6 +121,118 @@ hyperparams = {
 - `min_impurity_decrease`: Un nodo se dividirá si la disminución de impureza es mayor a este valor.
 
 - `ccp_alpha`: Parámetro de poda para la complejidad del árbol.
+
+
+
+## Optimizando el modelo Arbol de decisiones
+
+Hiper parametros para optimización del modelo
+
+```py
+hyperparams = {
+    'criterion': ['gini', 'entropy', 'log_loss'],  # Función para medir la calidad de una división.
+    'splitter': ['best', 'random'],  # Estrategia usada para dividir en nodos.
+    'max_depth': [None, 10, 20, 30, 40, 50],  # Profundidad máxima del árbol.
+    'min_samples_split': [2, 5, 10],  # Número mínimo de muestras necesarias para dividir un nodo.
+    'min_samples_leaf': [1, 2, 5, 10],  # Número mínimo de muestras necesarias en un nodo hoja.
+    'max_features': [None, 'sqrt', 'log2'],  # Número de características a considerar cuando se divide.
+    'max_leaf_nodes': [None, 10, 20, 30, 40],  # Número máximo de nodos hoja.
+    'min_impurity_decrease': [0.0, 0.01, 0.05],  # Umbral para una disminución mínima de la impureza.
+    'ccp_alpha': [0.0, 0.01, 0.1],  # Parámetro de complejidad usado para el podado.
+}
+```
+
+#### Explicación de los hiperparámetros RANDOM FOREST
+
+```py
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'max_features': ['sqrt', 'log2'],
+    'bootstrap': [True, False]
+}
+```
+
+#### **Hiperparámetros principales:**
+- `n_estimators`:
+
+   - Número de árboles en el bosque.
+   - Valor por defecto: 100.
+   - Ajustar este parámetro puede aumentar la precisión a costa de más tiempo de cómputo. Más árboles tienden a mejorar el rendimiento, pero con retornos decrecientes.
+
+- `max_depth`:
+
+   - Profundidad máxima de cada árbol.
+   - Valor por defecto: Sin límite (es decir, cada árbol crece hasta que todas las hojas están puras o contienen menos muestras que min_samples_split).
+   - Limitar la profundidad puede prevenir el sobreajuste.
+
+- `min_samples_split`:
+
+   - Número mínimo de muestras requeridas para dividir un nodo.
+   - Valor por defecto: 2.
+   - Un valor más alto previene que los árboles crezcan demasiado, lo que puede reducir el sobreajuste.
+
+- `min_samples_leaf`:
+
+   - Número mínimo de muestras que debe tener un nodo hoja.
+   - Valor por defecto: 1.
+   - Similar a min_samples_split, pero aplicado a las hojas. Aumentar este valor reduce el sobreajuste al hacer que las hojas sean más robustas.
+
+- `max_features`:
+
+   - Número máximo de características a considerar para encontrar la mejor división en cada nodo.
+   - Valores posibles: "auto", "sqrt", "log2" o un número entero.
+      - "auto" (o None) usa todas las características.
+      - "sqrt" usa la raíz cuadrada del número total de características.
+      - "log2" usa el logaritmo base 2 del número total de características.
+   - Reducir max_features puede llevar a un modelo más robusto, especialmente con conjuntos de datos con muchas características.
+
+- `bootstrap`:
+
+   - Si se deben utilizar muestras de "bootstrap" (muestreo con reemplazo).
+   - Valor por defecto: True.
+   - Si se establece en False, se utilizan todos los datos sin muestreo de "bootstrap".
+
+- `criterion`:
+
+   - Función para medir la calidad de una división.
+   - Para clasificación: "gini" (índice de Gini) o "entropy" (ganancia de información).
+   - Para regresión: "mse" (error cuadrático medio) o "mae" (error absoluto medio).
+
+- `max_samples`:
+
+   - Si bootstrap=True, define el número máximo de muestras de entrenamiento que se dibujan para entrenar cada árbol.
+   - Puede ser un número entero o un flotante que representa una fracción del total de muestras.
+
+- `class_weight` (solo para clasificación):
+
+   - Asigna pesos a las clases.
+   - Opciones: None (sin peso), 'balanced' (ajusta automáticamente basado en las frecuencias de clase) o un diccionario con pesos personalizados.
+
+#### **Otros hiperparámetros útiles:**
+
+- `min_weight_fraction_leaf`:
+
+   - Fracción mínima de la suma de los pesos de las muestras requerida para estar en un nodo hoja.
+   - Valor por defecto: 0.
+
+- `max_leaf_nodes`:
+
+   - Número máximo de nodos hojas en el árbol.
+   - Valor por defecto: None (sin límite).
+
+- `n_jobs`:
+
+   - Número de trabajos (núcleos de CPU) a ejecutar en paralelo.
+   - Valor por defecto: None (usa un solo núcleo).
+   - Puedes ajustar este valor a -1 para usar todos los núcleos disponibles y acelerar el entrenamiento.
+
+- `random_state`:
+
+   - Controla la aleatoriedad de la construcción del bosque y las particiones.
+   - Útil para obtener resultados reproducibles.
 
 ## Trabajando con Datos
 
