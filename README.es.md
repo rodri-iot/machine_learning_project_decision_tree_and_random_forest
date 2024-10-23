@@ -142,7 +142,7 @@ hyperparams = {
 }
 ```
 
-#### Explicación de los hiperparámetros RANDOM FOREST
+#### Optimizando modelo RANDOM FOREST
 
 ```py
 param_grid = {
@@ -233,6 +233,70 @@ param_grid = {
 
    - Controla la aleatoriedad de la construcción del bosque y las particiones.
    - Útil para obtener resultados reproducibles.
+
+
+## Optimizando modelo Boosting
+
+```py
+hyperparams = {
+    'n_estimators': [100, 200, 300],
+    'learning_rate': [0.01, 0.1, 0.2],
+    'max_depth': [3, 5, 7],
+    'subsample': [0.7, 0.8, 1.0],
+    'colsample_bytree': [0.7, 0.8, 1.0],
+    'gamma': [0, 0.1, 0.3],
+    'reg_alpha': [0, 0.1, 0.5],
+    'reg_lambda': [1, 1.5, 2]
+}
+```
+
+Principales hiperparámetros en un modelo de Boosting
+1. Número de árboles o estimadores (`n_estimators`)
+   - Descripción: Controla el número total de árboles (o iteraciones) que se construyen en el proceso de boosting. Un número mayor puede mejorar el rendimiento, pero también incrementa el riesgo de sobreajuste y aumenta el tiempo de entrenamiento.
+   - Valor recomendado: Generalmente, entre 100 y 500, pero depende del tamaño y la complejidad de los datos.
+   - Impacto: Cuanto mayor sea el número, más complejo será el modelo.
+2. Tasa de aprendizaje (`learning_rate`)
+   - Descripción: Este hiperparámetro controla cuánto contribuye cada árbol al modelo final. Valores más bajos hacen que cada árbol contribuya menos, lo que requiere más árboles para lograr el mismo nivel de ajuste.
+   - Valor recomendado: Comúnmente entre 0.01 y 0.3. Un valor bajo, como 0.1, es habitual, pero requerirá más árboles.
+   - Impacto: Valores bajos reducen el riesgo de sobreajuste, pero pueden requerir un número mayor de árboles.
+3. Profundidad máxima (`max_depth`)
+   - Descripción: Establece la profundidad máxima de cada árbol. Los árboles más profundos permiten capturar relaciones más complejas, pero también pueden llevar a sobreajuste.
+   - Valor recomendado: Entre 3 y 10 en la mayoría de los casos.
+   - Impacto: Un valor más alto puede captar interacciones más complejas, pero puede llevar a sobreajuste si es demasiado alto.
+4. Mínimo de muestras por hoja (`min_samples_leaf`)
+   - Descripción: Especifica el número mínimo de muestras necesarias en una hoja final. Esto evita que el modelo aprenda demasiado de pequeñas variaciones en los datos.
+   - Valor recomendado: Generalmente de 1 a 10.
+   - Impacto: Valores más altos pueden evitar el sobreajuste y hacer que el modelo sea más generalizable.
+5. Subsampleo (`subsample`)
+   - Descripción: Controla la fracción de muestras que se utilizan para entrenar cada árbol. Un valor inferior a 1 introduce aleatoriedad en el entrenamiento, lo que ayuda a reducir el sobreajuste.
+   - Valor recomendado: Generalmente entre 0.5 y 1.
+   - Impacto: Mejora la robustez del modelo al introducir variabilidad entre los árboles.
+6. Tasa de columnas (`colsample_bytree`)
+   - Descripción: Controla la fracción de características que se seleccionan aleatoriamente para construir cada árbol.
+   - Valor recomendado: Entre 0.5 y 1. En general, se prueba con diferentes valores para encontrar el equilibrio adecuado.
+   - Impacto: Reduce la correlación entre árboles, lo que puede ayudar a reducir el sobreajuste.
+7. Gamma (parámetro de regularización para XGBoost)
+   - Descripción: Controla la reducción mínima en la función de pérdida para hacer una partición adicional en un nodo. Si la mejora no es suficiente, no se hace la partición.
+   - Valor recomendado: Entre 0 y 5. Un valor de 0 significa que no hay restricciones, mientras que valores más altos refuerzan la poda.
+   - Impacto: Ayuda a prevenir el sobreajuste ajustando la complejidad del modelo.
+8. Alpha y Lambda (Regularización L1 y L2 en XGBoost)
+   - Descripción: Son los parámetros de regularización para controlar el sobreajuste mediante penalizaciones L1 (alpha) y L2 (lambda).
+   - Valor recomendado: Alpha se utiliza para la regularización L1 (similar a Lasso), y lambda para L2 (similar a Ridge). Los valores típicos son entre 0 y 1.
+   - Impacto: Ayudan a reducir el sobreajuste al restringir la magnitud de los coeficientes.
+9. Criterio de división (`criterion`)
+   - Descripción: Especifica la métrica utilizada para seleccionar las mejores divisiones en cada árbol.
+   - Opciones: gini, entropy (para clasificación), o mse, mae (para regresión).
+   - Impacto: Dependiendo de la tarea (clasificación o regresión), la elección del criterio puede afectar el rendimiento del modelo.
+10. Tasa de columnas por nivel (`colsample_bylevel`)
+   - Descripción: Controla el subconjunto de características que se consideran en cada nivel del árbol.
+   - Valor recomendado: Generalmente, se configura entre 0.5 y 1, donde 1 significa usar todas las características.
+   - Impacto: Reduce la correlación entre las características y mejora la capacidad de generalización.
+
+#### **Hiperparámetros específicos para LightGBM:**
+   - `num_leaves`: Controla el número de hojas máximas en un árbol. Un valor más bajo puede evitar el sobreajuste.
+   - `max_bin`: Controla el número máximo de bins usados para discretizar las características. Afecta la precisión y velocidad.
+   - `min_child_samples`: El número mínimo de datos en una hoja, similar a min_samples_leaf.
+
 
 ## Trabajando con Datos
 
